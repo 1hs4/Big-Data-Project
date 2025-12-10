@@ -1,0 +1,7 @@
+kafka-python
+pyspark
+vaderSentiment
+psycopg2-binary
+SQLAlchemy
+streamlit
+pandas
