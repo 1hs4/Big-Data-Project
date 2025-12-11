@@ -6,33 +6,8 @@ This project is an end-to-end real-time data processing pipeline designed for IC
 It performs live sentiment analysis on streaming text messages using Kafka, PySpark, PostgreSQL, and Streamlit.
 
 🚀 Architecture Overview
-           ┌───────────────┐
-           │   Producer     │
-           │ (Python App)   │
-           └───────┬───────┘
-                   │ JSON messages
-                   ▼
-        ┌────────────────────────┐
-        │        Kafka           │
-        │   (Message Broker)     │
-        └─────────┬──────────────┘
-                  │ Streaming Data
-                  ▼
-       ┌──────────────────────────┐
-       │  Spark Structured Stream │
-       │  (Sentiment + ETL Layer) │
-       └──────────┬───────────────┘
-                  │ Cleaned/Scored Data
-                  ▼
-        ┌─────────────────────────┐
-        │      PostgreSQL DB      │
-        └──────────┬──────────────┘
-                   │ Query Results
-                   ▼
-        ┌─────────────────────────┐
-        │    Streamlit Dashboard  │
-        └─────────────────────────┘
-
+![Architecture Diagram](images/Architecture.jpg)
+git
 
 🧰 Tech Stack
 | Component            | Technology                       |
