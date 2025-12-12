@@ -43,6 +43,35 @@ Big-Data-Project/
 │
 └── .gitignore
 
+---
+
+## 🌐 Real Online Review Data Source (Trustpilot Integration)
+
+In addition to the basic static producer, this project integrates **real-world user reviews** using a Trustpilot review scraper.  
+This provides authentic English reviews for products, services, restaurants, and applications — without requiring an API key or credit card.
+
+### 🔍 Why Trustpilot?
+Trustpilot hosts millions of public user reviews for:
+
+- Restaurants (e.g., McDonald's, Starbucks)
+- Retail brands (Nike, Adidas)
+- Online services (Uber, Amazon)
+- Apps and websites
+- Electronics
+- Shoes, fashion products, etc.
+
+These reviews are **public**, **text-rich**, and **perfect for real-time sentiment analysis**.
+
+Unlike APIs such as Google Places or Amazon Reviews — which require paid keys — Trustpilot pages can be parsed directly because they are publicly accessible.  
+This makes the data source **100% free**, **reliable**, and **legal for educational use**.
+
+---
+
+## 🧩 Trustpilot Review Producer (Real Data → Kafka)
+
+We created a new producer:
+
+
 
 ⚙️ Setup Instructions:
 

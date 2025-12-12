@@ -10,34 +10,38 @@ DB_CONFIG = {
     "dbname": "sentimentdb",
 }
 
-def load_data(limit: int = 200):
-    conn = psycopg2.connect(**DB_CONFIG)
-    query = """
-        SELECT id, text, sentiment_label, sentiment_score, created_at
-        FROM sentiments
-        ORDER BY created_at DESC
-        LIMIT %s;
-    """
-    df = pd.read_sql(query, conn, params=(limit,))
-    conn.close()
-    return df
+def load_data(limit: int = 15000):
+    try:
+        conn = psycopg2.connect(**DB_CONFIG)
+        query = """
+            SELECT id, text, sentiment_label, sentiment_score, created_at
+            FROM sentiments
+            ORDER BY created_at DESC
+            LIMIT %s;
+        """
+        df = pd.read_sql(query, conn, params=(limit,))
+        conn.close()
+        return df
+    except Exception as e:
+        st.error(f"Database error: {e}")
+        return pd.DataFrame()
 
 st.set_page_config(page_title="Sentiment Stream Dashboard", layout="wide")
 
 st.title("📊 Sentiment Stream Dashboard")
+st.caption("Live messages processed from Kafka → Spark → PostgreSQL")
 
-st.caption("Live messages processed from Kafka → Consumer → PostgreSQL")
-
-# Button to refresh data
 if st.button("🔄 Refresh data"):
-    st.experimental_rerun()
+    st.rerun()
 
 df = load_data()
+
+# DEBUG: show how many rows we actually loaded from DB
+st.write(f"🔎 Debug: loaded {len(df)} rows from PostgreSQL")
 
 if df.empty:
     st.warning("No data yet. Run the producer to generate some messages.")
 else:
-    # Top-level metrics
     col1, col2, col3 = st.columns(3)
     col1.metric("Total messages", len(df))
 
@@ -51,18 +55,13 @@ else:
     st.subheader("Sentiment distribution")
     st.bar_chart(counts)
 
-    # Optional: time-based chart
-    st.subheader("Sentiment over time (count)")
+    st.subheader("Sentiment over time (per minute)")
     time_df = (
-        df.groupby(["sentiment_label"])
-          .resample("1min", on="created_at")
+        df.set_index("created_at")
+          .groupby("sentiment_label")
+          .resample("1min")
           .size()
-          .reset_index(name="count")
+          .unstack(0)
+          .fillna(0)
     )
-    time_pivot = time_df.pivot_table(
-        index="created_at",
-        columns="sentiment_label",
-        values="count",
-        fill_value=0,
-    )
-    st.line_chart(time_pivot)
+    st.line_chart(time_df)

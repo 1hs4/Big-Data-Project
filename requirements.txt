@@ -5,3 +5,6 @@ psycopg2-binary
 SQLAlchemy
 streamlit
 pandas
+requests
+beautifulsoup4
+lxml
